@@ -15,23 +15,22 @@ function secondsToTimeFormat(seconds) {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds.toFixed(0)}`;
 }
 
-const updateDisplay = () => {
+function updateDisplay() {
     let allTimes = JSON.parse(localStorage.getItem("allTimes") || "[]");
     latestTime.textContent = secondsToTimeFormat(parseFloat(localStorage.getItem("latestTime") || "0"));
 
-    // Vis alle tider og opdater sum
     let total = 0;
     timesList.innerHTML = '';
-    for(let timeObj of allTimes) {
+    for (let timeObj of allTimes) {
         let listItem = document.createElement('li');
         listItem.textContent = `${timeObj.topic}: ${secondsToTimeFormat(timeObj.time)} (Startede: ${new Date(timeObj.date).toLocaleString()})`;
         timesList.appendChild(listItem);
         total += timeObj.time;
     }
     sumTime.textContent = secondsToTimeFormat(total);
-};
+}
 
-startStopBtn.addEventListener("click", () => {
+function startOrStopTimer() {
     if (startStopBtn.textContent === "Start") {
         startTime = Date.now() - (elapsedTime || 0);
         interval = setInterval(() => {
@@ -49,8 +48,15 @@ startStopBtn.addEventListener("click", () => {
         updateDisplay();
         startStopBtn.textContent = "Start";
     }
-});
+}
 
+// Event listeners
+startStopBtn.addEventListener("click", startOrStopTimer);
+emneInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        startOrStopTimer();
+    }
+});
 resetBtn.addEventListener("click", () => {
     clearInterval(interval);
     elapsedTime = 0;

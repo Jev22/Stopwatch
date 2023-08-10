@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopur med LocalStorage</title>
+</head>
+<body>
+
+<label for="emneInput">Emne: </label>
+<input type="text" id="emneInput">
+<button id="startStopBtn">Start</button>
+<button id="resetBtn">Nulstil</button>
+
+<p>Seneste tid: <span id="latestTime">0</span> minutter</p>
+<h3>Alle tider:</h3>
+<ul id="timesList"></ul>
+<p>Total tid: <span id="sumTime">0</span> minutter</p>
+
+<script src="stopur.js"></script>
+
+</body>
+</html>

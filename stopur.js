@@ -9,20 +9,26 @@ const latestTime = document.getElementById("latestTime");
 const timesList = document.getElementById("timesList");
 const sumTime = document.getElementById("sumTime");
 
+function secondsToTimeFormat(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds.toFixed(0)}`;
+}
+
 const updateDisplay = () => {
     let allTimes = JSON.parse(localStorage.getItem("allTimes") || "[]");
-    latestTime.textContent = (localStorage.getItem("latestTime") / 60).toFixed(2) || 0;
+    latestTime.textContent = secondsToTimeFormat(parseFloat(localStorage.getItem("latestTime") || "0"));
 
     // Vis alle tider og opdater sum
     let total = 0;
     timesList.innerHTML = '';
     for(let timeObj of allTimes) {
         let listItem = document.createElement('li');
-        listItem.textContent = `${timeObj.topic}: ${timeObj.time} minutter (Startede: ${new Date(timeObj.date).toLocaleString()})`;
+        listItem.textContent = `${timeObj.topic}: ${secondsToTimeFormat(timeObj.time)} (Startede: ${new Date(timeObj.date).toLocaleString()})`;
         timesList.appendChild(listItem);
         total += timeObj.time;
     }
-    sumTime.textContent = (total / 60).toFixed(2);
+    sumTime.textContent = secondsToTimeFormat(total);
 };
 
 startStopBtn.addEventListener("click", () => {
@@ -30,7 +36,7 @@ startStopBtn.addEventListener("click", () => {
         startTime = Date.now() - (elapsedTime || 0);
         interval = setInterval(() => {
             elapsedTime = (Date.now() - startTime) / 1000;
-            latestTime.textContent = (elapsedTime / 60).toFixed(2);
+            latestTime.textContent = secondsToTimeFormat(elapsedTime);
         }, 100);
 
         startStopBtn.textContent = "Stop";
@@ -48,7 +54,7 @@ startStopBtn.addEventListener("click", () => {
 resetBtn.addEventListener("click", () => {
     clearInterval(interval);
     elapsedTime = 0;
-    latestTime.textContent = '0';
+    latestTime.textContent = '0:00';
     startStopBtn.textContent = "Start";
 });
 
